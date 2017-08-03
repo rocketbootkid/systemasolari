@@ -26,18 +26,57 @@ and open the template in the editor.
           
             numOrbits = Math.ceil(Math.random() * 10);
             x = window.innerWidth/2;
-            y =  window.innerHeight/2;
+            y = window.innerHeight/2;
           
             for (orbits = 0; orbits < numOrbits; orbits++) {
                 
-                radius = Math.ceil(Math.random() * (window.innerHeight/2 - 100));
+                radius = 0;
+                while (radius < 100) {
+                radius = Math.ceil(Math.random() * (window.innerHeight/2 - 50));
+                }
                 
                 context.beginPath();
                 context.arc(x, y, radius, 0*Math.PI, 2*Math.PI);
                 context.setLineDash([5, 25]);
                 context.stroke();
                 
+                drawPlanet(context, radius);
+                
             }
+            
+        }
+        
+        function drawPlanet(context, radius) {
+            
+            size = 0;
+            while (size < 5) {
+               size = Math.ceil(Math.random() * 20);
+            }
+            xpos = window.innerWidth/2 - radius;
+            ypos = window.innerHeight/2;
+                
+            context.beginPath();
+            context.arc(xpos, ypos, size, 0*Math.PI, 2*Math.PI);
+            context.fillStyle = generateColor();
+            context.fill();
+            context.setLineDash([0,0]);
+            context.stroke(); 
+            
+        }
+      
+        function generateColor() {
+            
+            // Generates a random Hex color string
+            
+            color = "#";
+            
+            for (c = 0; c < 3; c++) {
+                component = (Math.ceil(Math.random() * 255)).toString(16);
+                color = color + component;  
+            }
+            
+            return color;
+            
         }
       
         var canvas = document.getElementById('myCanvas');
