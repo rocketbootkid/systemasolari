@@ -14,10 +14,12 @@ and open the template in the editor.
     <canvas id="myCanvas" width="2000" height="1000"></canvas>
     <script>
       
+        // http://www.html5canvastutorials.com/advanced/html5-canvas-animation-stage/
+      
         function drawCircle(myCircle, context) {
             context.beginPath();
             context.arc(myCircle.x, myCircle.y, myCircle.radius, myCircle.sAngle, myCircle.eAngle);
-            context.fillStyle = '#000';
+            context.fillStyle = generateStarColor();
             context.fill();
             context.stroke();    
         }
@@ -37,7 +39,7 @@ and open the template in the editor.
                 
                 context.beginPath();
                 context.arc(x, y, radius, 0*Math.PI, 2*Math.PI);
-                context.setLineDash([5, 25]);
+                context.setLineDash([2, 30]);
                 context.stroke();
                 
                 drawPlanet(context, radius);
@@ -52,8 +54,10 @@ and open the template in the editor.
             while (size < 5) {
                size = Math.ceil(Math.random() * 20);
             }
-            xpos = window.innerWidth/2 - radius;
-            ypos = window.innerHeight/2;
+            angle = ((Math.random() * 200)/100) * Math.PI;
+            positions = generateCoords(angle, radius);
+            xpos = window.innerWidth/2 + positions[0];
+            ypos = window.innerHeight/2 + positions[1];
                 
             context.beginPath();
             context.arc(xpos, ypos, size, 0*Math.PI, 2*Math.PI);
@@ -61,6 +65,32 @@ and open the template in the editor.
             context.fill();
             context.setLineDash([0,0]);
             context.stroke(); 
+            
+        }
+      
+        function generateCoords(angleRadians, orbitRadius) {
+        
+            // Converts provided angle and radius to x, y positions
+        
+            yposition = Math.sin(angleRadians) * orbitRadius;
+            xposition = Math.cos(angleRadians) * orbitRadius;
+            
+            return [xposition, yposition];
+        
+        }
+      
+        function generateStarColor() {
+            
+            // Generates a random Hex color string
+            
+            color = "#ff";
+            
+            for (c = 0; c < 2; c++) {
+                component = (Math.ceil(Math.random() * 255)).toString(16);
+                color = color + component;  
+            }
+            
+            return color;            
             
         }
       
