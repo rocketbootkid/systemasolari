@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Systema Solari</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+    <canvas id="myCanvas" width="2000" height="1000"></canvas>
+    <script>
+      
+        function drawCircle(myCircle, context) {
+            context.beginPath();
+            context.arc(myCircle.x, myCircle.y, myCircle.radius, myCircle.sAngle, myCircle.eAngle);
+            context.fillStyle = '#000';
+            context.fill();
+            context.stroke();    
+        }
+      
+        function drawOrbits(context) {
+          
+            numOrbits = Math.ceil(Math.random() * 10);
+            x = window.innerWidth/2;
+            y =  window.innerHeight/2;
+          
+            for (orbits = 0; orbits < numOrbits; orbits++) {
+                
+                radius = Math.ceil(Math.random() * (window.innerHeight/2 - 100));
+                
+                context.beginPath();
+                context.arc(x, y, radius, 0*Math.PI, 2*Math.PI);
+                context.setLineDash([5, 25]);
+                context.stroke();
+                
+            }
+        }
+      
+        var canvas = document.getElementById('myCanvas');
+        var context = canvas.getContext('2d');
+        
+        // Make canvas size of window
+        context.canvas.width = window.innerWidth;
+        context.canvas.height = window.innerHeight;
+
+        var myCircle = {
+            x: window.innerWidth/2,
+            y: window.innerHeight/2,
+            radius: 50,
+            sAngle: 0*Math.PI,
+            eAngle: 2*Math.PI
+        }
+   
+        // Runs things
+        drawCircle(myCircle, context);
+        drawOrbits(context);
+
+    </script>
+    </body>
+</html>
