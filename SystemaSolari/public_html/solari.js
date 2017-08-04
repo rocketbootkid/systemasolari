@@ -16,6 +16,10 @@ context.canvas.height = window.innerHeight;
 // Runs things
 
 var numPlanets = 10;
+var numMoons = 5;
+var moonSize = 3;
+var moonLikelihood = 3; // 0 = Always, 10 = Never
+var moonOrbitIncrement = 15;
 var planetRadialGap = 5;
 var planetOrbitGap = 100;
 var center_x = window.innerWidth/2;
@@ -30,6 +34,7 @@ var myCircle = {
 var currentOrbitRadius = 100;
 var radius = 0;
 
+drawSpace();
 drawStar(myCircle, context);
 drawPlanets(context, numPlanets);
 
@@ -37,11 +42,19 @@ drawPlanets(context, numPlanets);
 //                              FUNCTIONS
 // ******************************************************************************
 
+function drawSpace() {
+    
+    context.beginPath();
+    context.rect(0, 0, context.canvas.width, context.canvas.height);
+    context.fillStyle = "black";
+    context.fill(); 
+}
+
 function drawStar() {
   
     // Draw vertical axis
     context.beginPath();
-    context.strokeStyle = "black";
+    context.strokeStyle = "white";
     context.moveTo(center_x, center_y);
     context.lineTo(center_x, 0);
     context.stroke(); 
@@ -51,7 +64,7 @@ function drawStar() {
     context.beginPath();
     context.arc(myCircle.x, myCircle.y, myCircle.radius, myCircle.sAngle, myCircle.eAngle);
     context.fillStyle = generateStarColor();
-    context.strokeStyle = "black";
+    context.strokeStyle = "white";
     context.stroke(); 
     context.fill();
     context.closePath();
@@ -94,7 +107,7 @@ function drawOrbit() {
     context.beginPath();
     context.arc(center_x, center_y, radius, 0*Math.PI, 2*Math.PI);
     //context.setLineDash([2, 30]);
-    context.strokeStyle = "#ccc";
+    context.strokeStyle = "#444";
     context.stroke();
 
 }
@@ -118,8 +131,58 @@ function drawPlanet(context, radius) {
     context.setLineDash([0,0]);
     context.stroke(); 
 
-    return [size, angle];
+    drawMoons(size, xpos, ypos);
 
+    return [size, angle];
+    
+}
+
+function drawMoons(size, xpos, ypos) {
+    
+    // Determine if to draw any moons
+    choice = Math.ceil(Math.random() * 10);
+    
+    if (choice > moonLikelihood) {
+        // Determine how many to draw
+        moons = Math.ceil(Math.random() * numMoons);
+        currentMoonRadius = size + 5;
+
+        if (moons > 0) {
+            for (m = 0; m < moons; m++) {
+
+                drawMoonOrbit(currentMoonRadius, xpos, ypos);
+
+                drawMoon(currentMoonRadius, xpos, ypos);
+
+                currentMoonRadius = currentMoonRadius + Math.ceil((Math.random() * moonOrbitIncrement));
+            }
+        }
+    }
+    
+}
+
+function drawMoonOrbit(radius, xpos, ypos) {
+    
+    context.beginPath();
+    context.arc(xpos, ypos, radius, 0*Math.PI, 2*Math.PI);
+    context.strokeStyle = "#777";
+    context.stroke();    
+    
+}
+
+function drawMoon(currentMoonRadius, xpos, ypos) {
+    
+    size = Math.ceil(Math.random() * moonSize);
+    moon_angle = ((Math.random() * 200)/100)*Math.PI;
+    moon_x = xpos + (currentMoonRadius * Math.cos(moon_angle));
+    moon_y = ypos + (currentMoonRadius * Math.sin(moon_angle));
+    context.beginPath();
+    context.arc(moon_x, moon_y, size, 0*Math.PI, 2*Math.PI);
+    context.fillStyle = generateColor();
+    context.strokeStyle = "#555";
+    context.fill()
+    context.stroke();     
+    
 }
 
 function drawPlanetRadial(radius, details) {
@@ -192,7 +255,7 @@ function drawOrbitLegend(radius) {
     //window.alert(legend_x + "," + legend_y);
 
     context.beginPath();
-    context.fillStyle = "black";
+    context.fillStyle = "white";
     context.font = "12px Verdana";
     context.fillText(radius, legend_x, legend_y);
     context.stroke(); 
@@ -206,7 +269,7 @@ function drawPlanetLegend(radius, size) {
     legend_y = center_y - radius - 5;
     
     context.beginPath();
-    context.fillStyle = "black";
+    context.fillStyle = "white";
     context.font = "12px Verdana";
     context.fillText(planetName + "-" + size, legend_x, legend_y);
     context.stroke();
