@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="578" height="200"></canvas>
+    <script>
+        
+        var canvas = document.getElementById('myCanvas');
+        var context = canvas.getContext('2d');
+        
+        // Make canvas size of window
+        context.canvas.width = window.innerWidth;
+        context.canvas.height = window.innerHeight;
+        
+        var center_x = window.innerWidth/2;
+        var center_y = window.innerHeight/2;
+        
+        window.requestAnimFrame = (function(callback) {
+          return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+          function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+          };
+        })();
+      
+        function animate(myRectangle, canvas, context, startTime) {
+          // update
+          var time = (new Date()).getTime() - startTime;
+
+          var linearSpeed = 100;
+          // pixels / second
+          var newX = linearSpeed * time / 1000;
+
+          if(newX < canvas.width - myRectangle.width - myRectangle.borderWidth / 2) {
+            myRectangle.x = newX;
+          }
+
+          // clear
+          context.clearRect(0, 0, canvas.width, canvas.height);
+
+          drawRectangle(myRectangle, context);
+
+          // request new frame
+          requestAnimFrame(function() {
+            animate(myRectangle, canvas, context, startTime);
+          });
+        }
+
+        var myCircle = {
+            x: center_x - 200,
+            y: center_y - 200,
+            radius: 50,
+            sAngle: 0*Math.PI,
+            eAngle: 2*Math.PI
+        }
+
+        function drawStar() {
+
+            // Draw actual star
+            context.beginPath();
+            context.arc(myCircle.x, myCircle.y, myCircle.radius, myCircle.sAngle, myCircle.eAngle);
+            context.fillStyle = "black";
+            context.strokeStyle = "black";
+            context.stroke(); 
+            context.fill();
+            context.closePath();
+
+        }
+
+      drawStar();
+
+      // wait one second before starting animation
+      setTimeout(function() {
+        var startTime = (new Date()).getTime();
+        animate(myCircle, canvas, context, startTime);
+      }, 1000);
+    </script>
+  </body>
+</html>      

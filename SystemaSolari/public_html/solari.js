@@ -28,7 +28,8 @@ var numMoons = 3;
 var moonSize = 3;
 var moonLikelihood = 0.6; // 0 = Always, 1 = Never
 var firstMoonRadius = 10;
-var moonOrbitIncrement = 10;
+var moonOrbitIncrement = 5;
+var finalMoonRadius = 0;
 
 var radiusLegend = 0;
 var planetLegend = 0;
@@ -122,7 +123,7 @@ function drawPlanets() {
         drawPlanetLegend(radius, details[0]);
         drawOrbitLegend(radius);
         
-        drawPlanetRadial(radius, details); // Draws line from Star to Planet
+        //drawPlanetRadial(radius, details); // Draws line from Star to Planet
         
         currentOrbitRadius = radius + details[0] + planetOrbitIncrement;
         
@@ -134,7 +135,7 @@ function drawPlanets() {
 
 function drawOrbit() {
 
-    radius = Math.ceil(Math.random() * planetOrbitGap) + currentOrbitRadius;
+    radius = Math.ceil(Math.random() * planetOrbitGap) + currentOrbitRadius + finalMoonRadius;
 
     context.beginPath();
     context.arc(center_x, center_y, radius, 0*Math.PI, 2*Math.PI);
@@ -188,10 +189,12 @@ function drawMoons(size, xpos, ypos) {
 
                 drawMoon(currentMoonRadius, xpos, ypos);
 
-                currentMoonRadius = currentMoonRadius + Math.ceil((Math.random() * moonOrbitIncrement));
+                currentMoonRadius = currentMoonRadius + Math.ceil((Math.random() * moonOrbitIncrement) + 5);
             }
         }
     }
+    
+    finalMoonRadius = currentMoonRadius;
     
 }
 
@@ -214,9 +217,9 @@ function drawMoon(currentMoonRadius, xpos, ypos) {
     context.arc(moon_x, moon_y, size, 0*Math.PI, 2*Math.PI);
     //context.fillStyle = generateColor();
     context.fillStyle = "white";
-    context.strokeStyle = "#555";
+    //context.strokeStyle = "#555";
     context.fill()
-    context.stroke();     
+    //context.stroke();     
     
 }
 
@@ -306,13 +309,13 @@ function drawPlanetLegend(radius, size) {
     planetName = generatePlanetName();
     //legend_x = center_x + 5;
     //legend_y = center_y - radius - 5;
-    legend_coords = generateCoords(-legendAngle, radius);
+    legend_coords = generateCoords(legendAngle, radius);
     
     context.beginPath();
-    context.textAlign = "right";
+    context.textAlign = "left";
     context.fillStyle = "white";
     context.font = "12px Verdana";
-    context.fillText(planetName + "-" + size, center_x - legend_coords[0] - 10, center_y - legend_coords[1]);
+    context.fillText(planetName + "-" + size, center_x - legend_coords[0] + 10, center_y - legend_coords[1]);
     context.stroke();
     
 }
